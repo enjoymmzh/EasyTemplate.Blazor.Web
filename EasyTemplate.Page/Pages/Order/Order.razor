@@ -1,0 +1,35 @@
+﻿@page "/app/order"
+@attribute [ReuseTabsPage(Title = "订单管理")]
+
+<Spin Spinning="Loading">
+    <Table @ref="_Table" AutoHeight TItem="SystemMenu" DataSource="_DataSource" @bind-PageSize="Ps" @bind-PageIndex="Pi"
+           TreeChildren="item=>item.Children" @bind-SelectedRows="_SelectedRows" OnChange="OnChange">
+        <ColumnDefinitions Context="row">
+            <PropertyColumn Property="c => c.Name" Title="菜单名称" />
+            <PropertyColumn Property="c => c.Path" Title="路由" />
+            <PropertyColumn Property="c=>c.Necessary">
+                @{
+                    var tag = row.Necessary ? "必需" : "非必需";
+                    var color = row.Necessary ? TagColor.Green : TagColor.Blue;
+                }
+                <Tag Color="@color">@tag</Tag>
+            </PropertyColumn>
+            <PropertyColumn Property="c => c.Key" Title="自定义唯一键值" />
+            <PropertyColumn Property="c => c.Icon" Title="图标">
+                @{
+                    var type = row.Icon;
+                }
+                <Icon Type="@type" Theme="IconThemeType.Outline" />
+            </PropertyColumn>
+            <PropertyColumn Property="c => c.Sort" Title="排序" />
+        </ColumnDefinitions>
+        <PaginationTemplate>
+            <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                        Total="context.Total"
+                        PageSize="context.PageSize"
+                        Current="context.PageIndex"
+                        ShowSizeChanger
+                        OnChange="context.HandlePageChange" />
+        </PaginationTemplate>
+    </Table>
+</Spin>

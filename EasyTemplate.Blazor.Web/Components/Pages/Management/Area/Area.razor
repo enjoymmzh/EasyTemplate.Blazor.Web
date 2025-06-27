@@ -1,0 +1,75 @@
+﻿@page "/system/area"
+@attribute [ReuseTabsPage(Title = "区域管理")]
+
+<Spin Spinning="Loading">
+    <Table @ref="_table" AutoHeight TItem="SystemArea" DataSource="_dataSource"
+           @bind-PageSize="Ps" @bind-PageIndex="Pi" TreeChildren="item=>item.Children" @bind-SelectedRows="_selectedRows"
+           OnChange="OnChange">
+        <ColumnDefinitions Context="row">
+            <PropertyColumn Align="ColumnAlign.Center" Property="c => c.AreaName" Title="区域名称" />
+            <PropertyColumn Align="ColumnAlign.Center" Property="c => c.AreaCode" Title="区域编码" />
+            <PropertyColumn Align="ColumnAlign.Center" Property="c => c.Level" Title="层级" />
+        </ColumnDefinitions>
+        <PaginationTemplate>
+            <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                        Total="context.Total"
+                        PageSize="context.PageSize"
+                        Current="context.PageIndex"
+                        ShowSizeChanger
+                        OnChange="context.HandlePageChange" />
+        </PaginationTemplate>
+    </Table>
+</Spin>
+
+@inject ModalService ModalService;
+@inject ConfirmService ComfirmService;
+@inject IMessageService _message;
+
+@code {
+
+    /// <summary>
+    ///
+    /// </summary>
+    private ITable _table;
+    /// <summary>
+    ///
+    /// </summary>
+    private IEnumerable<SystemArea> _selectedRows = [];
+    /// <summary>
+    ///
+    /// </summary>
+    private List<SystemArea> _dataSource;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Pi = 1;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Ps = 20;
+    /// <summary>
+    ///
+    /// </summary>
+    private int _total;
+    /// <summary>
+    ///
+    /// </summary>
+    private bool Loading = false;
+
+    private async Task OnExpand(SystemArea row)
+    {
+        var data = row;
+        if (data.Children == null)
+        {
+            await AddChildren(data);
+        }
+    }
+
+    async Task AddChildren(SystemArea row)
+    {
+        await Task.Delay(1000);
+        var index = row.Children?.Count() ?? 0;
+        row.Children = row.Children ?? [];
+    }
+
+}

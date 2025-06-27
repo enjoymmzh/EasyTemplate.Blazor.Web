@@ -1,0 +1,21 @@
+﻿@using EasyTemplate.Page.Common
+@using Microsoft.AspNetCore.Components.Authorization
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="@TheAssembly.Assemblies">
+        <Found Context="routeData">
+            <CascadingValue Value="routeData">
+                <Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.BasicLayout)">
+                    <NotAuthorized>
+                        <RedirectToLogin />
+                    </NotAuthorized>
+                </Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView>
+            </CascadingValue>
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(Layout.ErrorLayout)" />
+        </NotFound>
+    </Router>
+
+    <AntContainer />
+</CascadingAuthenticationState>

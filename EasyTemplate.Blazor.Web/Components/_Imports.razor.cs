@@ -1,0 +1,10 @@
+﻿global using EasyTemplate.Tool.Entity;
+global using AntDesign;
+global using AntDesign.Pro.Resources;
+global using AntDesign.ProLayout;
+global using Microsoft.AspNetCore.Components;
+global using Microsoft.Extensions.Localization;
+global using AntDesign.Extensions.Localization;
+global using System.Globalization;
+global using Microsoft.AspNetCore.Authorization;
+global using Blazored.LocalStorage;

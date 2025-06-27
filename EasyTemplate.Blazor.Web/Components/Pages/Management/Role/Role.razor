@@ -1,0 +1,236 @@
+﻿@page "/system/role"
+@attribute [ReuseTabsPage(Title = "角色管理")]
+
+<Spin Spinning="Loading">
+    <GridRow Gutter="8">
+        <GridCol Span="18">
+            <Table @ref="_Table"
+                   TItem="SystemRole"
+                   @bind-PageSize="Ps"
+                   @bind-PageIndex="Pi"
+                   Total="_Total"
+                   DataSource="_DataSource"
+                   @bind-SelectedRows="_SelectedRows"
+                   OnRowClick="OnRowClick"
+                   OnChange="OnChange">
+                <TitleTemplate>
+                    <Flex Justify="FlexJustify.Start" Gap="@("10")">
+                        <Input Width="300" Placeholder="输入名称" @bind-Value="@Q_Name" />
+                        <Button OnClick="Search">搜索</Button>
+                        <Button OnClick="ResetQuery">重置</Button>
+
+                        <Button Type="ButtonType.Primary" Color="Color.Green6" OnClick="() => StartEdit(default)">新增</Button>
+                    </Flex>
+                </TitleTemplate>
+                <ColumnDefinitions Context="row">
+                    <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.Id" Width="100" Title="ID" />
+                    <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.Name" Title="角色名称" />
+                    <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.RoleType" Title="角色类型">
+                        @{
+                            TagColor color = TagColor.Green;
+                            string tagText = "管理员";
+                            if (row.RoleType == RoleType.System)
+                            {
+                                color = TagColor.Green;
+                                tagText = "系统";
+                            }
+                            else if (row.RoleType == RoleType.Normal)
+                            {
+                                color = TagColor.Blue;
+                                tagText = "一般";
+                            }
+                            else
+                            {
+                                color = TagColor.Magenta;
+                                tagText = "其它";
+                            }
+                        }
+                        <Tag Color="@color">@tagText</Tag>
+                    </PropertyColumn>
+                    <PropertyColumn Align="ColumnAlign.Center" Width="100" Property="c=>c.Enabled" Title="是否启用">
+                        <Switch Checked="@row.Enabled" @bind-Value="@row.Enabled" CheckedChildren="启用" UnCheckedChildren="禁用" OnChange="() => CheckedChanged(row)" />
+                    </PropertyColumn>
+                    <PropertyColumn Align="ColumnAlign.Center" Property="c => c.CreateTime" Title="创建时间">
+                        @{
+                            var formattedTime = row.CreateTime?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A";
+                        }
+                        @formattedTime
+                    </PropertyColumn>
+                    <ActionColumn Title="操作">
+                        <Button Type="ButtonType.Primary" Color="Color.Blue6" OnClick="() => StartEdit(row)">编辑</Button>
+                        <Button Type="ButtonType.Primary" Color="Color.Red6" Danger OnClick="() => Delete(row)">删除</Button>
+                    </ActionColumn>
+                </ColumnDefinitions>
+                <PaginationTemplate>
+                    <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                                Total="context.Total"
+                                PageSize="context.PageSize"
+                                Current="context.PageIndex"
+                                ShowSizeChanger
+                                OnChange="context.HandlePageChange" />
+                </PaginationTemplate>
+            </Table>
+        </GridCol>
+        <GridCol Span="6">
+            <Divider Orientation="DividerOrientation.Left">操作</Divider>
+            <Space>
+                <SpaceItem>
+                    <Button OnClick="() => { _Tree.CheckAll(); }">全选</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button OnClick="() => { _Tree.UncheckAll(); }">取消全选</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Type="ButtonType.Primary" Color="Color.Blue6" OnClick="() => UpdateMenu()">提交选择</Button>
+                </SpaceItem>
+            </Space>
+            <Alert Style="margin-top:10px" Message="选择菜单节点前，必须先选择一个角色" Type="AlertType.Warning" ShowIcon="true" />
+            <Divider Orientation="DividerOrientation.Left">选择菜单</Divider>
+            <Tree @ref="_Tree"
+                  ShowIcon
+                  Checkable
+                  ExpandOnClickNode
+                  DisabledExpression="x=>x.DataItem.Id == 1"
+                  TItem="SystemMenu"
+                  DefaultCheckedKeys="@_DefaultCheckedKeys"
+                  CheckedKeys="@_CheckedKeys"
+                  DataSource="@Global.Menus"
+                  KeyExpression="x=>x.DataItem.Id.ToString()"
+                  TitleExpression="x => x.DataItem.Name"
+                  ChildrenExpression="x => x.DataItem.Children"
+                  IconExpression="x => x.DataItem.Icon"
+                  CheckableExpression="x=>x.DataItem.Children is null" />
+        </GridCol>
+    </GridRow>
+
+</Spin>
+
+@inject ModalService ModalService;
+@inject ConfirmService ComfirmService;
+@inject IMessageService MessageService;
+
+@code {
+
+    /// <summary>
+    ///
+    /// </summary>
+    private ITable _Table;
+    /// <summary>
+    ///
+    /// </summary>
+    private Tree<SystemMenu> _Tree;
+    /// <summary>
+    ///
+    /// </summary>
+    private IEnumerable<SystemRole> _SelectedRows = [];
+    /// <summary>
+    ///
+    /// </summary>
+    private List<SystemRole> _DataSource;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Pi = 1;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Ps = 10;
+    /// <summary>
+    ///
+    /// </summary>
+    private int _Total;
+    /// <summary>
+    ///
+    /// </summary>
+    private bool Loading = false;
+
+    bool autoExpandParent;
+
+    private void CheckAll()
+    {
+        _Tree.CheckAll();
+    }
+
+    private void UncheckAll()
+    {
+        _Tree.UncheckAll();
+    }
+
+    private void StartEdit(SystemRole row)
+    {
+        var data = row ?? new();
+        ModalRef<bool> modalRef = default;
+        IForm form = default;
+        modalRef = ModalService.CreateModal<bool>(new()
+                {
+                    Title = data.Id > 0 ? "编辑" : "新增",
+                    Content =
+    @<Form @ref="form" Model="data" OnFinish="()=> modalRef.OkAsync(true)" LabelColSpan="6" WrapperColSpan="18">
+        <FormItem Label="角色名称" Required>
+            <Input @bind-Value="@data.Name" />
+        </FormItem>
+        <FormItem Label="是否启用" Required>
+            <Select @bind-Value="@data.Enabled"
+                    TItemValue="bool"
+                    TItem="string"
+                    DefaultActiveFirstOption="false">
+                <SelectOptions>
+                    <SelectOption TItemValue="bool" TItem="string" Value="true" Label="启用" />
+                    <SelectOption TItemValue="bool" TItem="string" Value="false" Label="禁用" />
+                </SelectOptions>
+            </Select>
+        </FormItem>
+        <FormItem Label="角色类型" Required>
+            <Select @bind-Value="@context.RoleType"
+                    TItemValue="RoleType"
+                    TItem="string"
+                    DefaultActiveFirstOption="true">
+                <SelectOptions>
+                    @foreach (var roleType in Enum.GetValues(typeof(RoleType)).Cast<RoleType>())
+                {
+                    <SelectOption TItemValue="RoleType" TItem="string" Value="@roleType" Label="@roleType.Description()" />
+                }
+                </SelectOptions>
+            </Select>
+        </FormItem>
+    </Form>,
+            OnOk = async (e) =>
+            {
+                if (!form.Validate())
+                {
+                    return;
+                }
+
+                modalRef.SetConfirmLoading(true);
+
+                var flag = await InsertOrUpdate(data);
+                if (flag)
+                {
+                    await MessageService.Success("操作成功");
+                }
+                else
+                {
+                    await MessageService.Error("操作失败");
+                }
+
+                await modalRef.CloseAsync();
+                _Table.ReloadData(Pi, Ps);
+                StateHasChanged();
+            },
+            OnCancel = async (e) =>
+            {
+                if (form.IsModified && (!await Comfirm("已修改内容，确定退出吗?")))
+                {
+                    return;
+                }
+                await modalRef.CloseAsync();
+            }
+        });
+    }
+
+    private async Task<bool> Comfirm(string message)
+    {
+        return await ComfirmService.Show(message, "提示", ConfirmButtons.YesNo, ConfirmIcon.Warning) == ConfirmResult.Yes;
+    }
+
+}

@@ -1,0 +1,45 @@
+﻿@namespace EasyTemplate.Blazor.Web.Components.Pages.Account.Setting
+
+<div class="baseView">
+    <div class="left" style="min-width: 310px;">
+        <Form Layout="FormLayout.Vertical"
+              OnFinish="HandleFinish"
+              Model="@Global.CurrentUser">
+            <FormItem Label="邮箱">
+                <AntDesign.Input @bind-Value="@context.Email" />
+            </FormItem>
+            <FormItem Label="昵称">
+                <AntDesign.Input @bind-Value="@context.NickName" />
+            </FormItem>
+            <FormItem Label="个人资料">
+                <AntDesign.TextArea @bind-Value="@context.Signature" />
+            </FormItem>
+            <FormItem Label="住址">
+                <AntDesign.Input @bind-Value="@context.Address" />
+            </FormItem>
+            <FormItem Label="手机号">
+                <AntDesign.Input @bind-Value="@context.Mobile" />
+            </FormItem>
+            <FormItem>
+                <Button HtmlType="submit" Type=" ButtonType.Primary">
+                    更新信息
+                </Button>
+            </FormItem>
+        </Form>
+    </div>
+    <div class="right__b__1">
+        <div class="avatar_title">
+            头像
+        </div>
+        <div class="avatar">
+            <img src="@Global.CurrentUser.Avatar" alt="avatar" />
+        </div>
+        <Upload ShowUploadList="false" Action="/Api/File/UploadImage" OnSingleCompleted="OnSingleCompleted">
+            <div class="button_view">
+                <Button Icon="upload">
+                    修改头像
+                </Button>
+            </div>
+        </Upload>
+    </div>
+</div>

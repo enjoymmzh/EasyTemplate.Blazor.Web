@@ -1,0 +1,18 @@
+@namespace EasyTemplate.Blazor.Web.Components.Pages.Account.Setting
+
+<AntList 
+    TItem="dynamic"
+    ItemLayout="ListItemLayout.Horizontal"
+    DataSource="_data">
+    <ListItem Actions="_actions">
+        <ListItemMeta Avatar="" Description="@context.Description">
+            <TitleTemplate>@context.Title</TitleTemplate>
+        </ListItemMeta>
+    </ListItem>
+</AntList>
+
+@code
+{
+    private static RenderFragment _modify = @<a key="modify">Modify</a>;
+    private readonly RenderFragment[] _actions = {_modify};
+}

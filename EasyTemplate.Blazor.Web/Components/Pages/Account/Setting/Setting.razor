@@ -1,0 +1,37 @@
+﻿@namespace EasyTemplate.Blazor.Web.Components.Pages.Account.Setting
+@page "/account/setting"
+@attribute [ReuseTabsPage(Title = "用户设置")]
+
+<GridContent>
+    <div class="main__b__2">
+        <div class="leftMenu">
+            <Menu 
+                Mode="MenuMode.Inline" 
+                SelectedKeys="new []{_selectKey}" 
+                OnMenuItemClicked="SelectKey">
+                @foreach (var item in _menuMap)
+                {
+                    <MenuItem Key="@item.Key">@item.Value</MenuItem>
+                }
+            </Menu>
+        </div>
+        <div class="right__b__0">
+            <div class="title">@_menuMap[_selectKey]</div>
+            @switch (_selectKey)
+            {
+                case "base":
+                     <BaseView />
+                    break;
+@*                 case "security":
+                    <SecurityView />
+                    break; *@
+                case "binding":
+                    <BindingView />
+                    break;
+@*                 case "notification":
+                    <NotificationView />
+                    break; *@
+            }
+        </div>
+    </div>
+</GridContent>

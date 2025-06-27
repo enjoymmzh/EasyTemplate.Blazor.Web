@@ -1,0 +1,21 @@
+﻿@namespace EasyTemplate.Blazor.Web
+@layout ErrorLayout
+@page "/error/{code:int}"
+@attribute [ReuseTabsPage(Ignore = true)]
+
+@code{
+    [Parameter]
+    public int Code { get; set; }
+
+    public string Message { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Message = Code switch
+        {
+            404 => "Page not found.",
+            500 => "Internal server error.",
+            _ => "An error occurred."
+        };
+    }
+}

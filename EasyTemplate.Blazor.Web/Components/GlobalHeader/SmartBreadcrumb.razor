@@ -1,0 +1,81 @@
+@using Microsoft.AspNetCore.Components.Routing
+@inject NavigationManager NavigationManager
+
+<AntDesign.Breadcrumb>
+    @foreach (var crumb in breadcrumbs)
+    {
+        <AntDesign.BreadcrumbItem>
+            <NavLink href="@crumb.Url">@crumb.Text</NavLink>
+        </AntDesign.BreadcrumbItem>
+    }
+</AntDesign.Breadcrumb>
+
+@code {
+
+    private List<BreadcrumbItem> breadcrumbs = new List<BreadcrumbItem>();
+
+    protected override void OnInitialized()
+    {
+        GenerateBreadcrumbs();
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        GenerateBreadcrumbs();
+        StateHasChanged();
+    }
+
+    private void GenerateBreadcrumbs()
+    {
+        breadcrumbs.Clear();
+        breadcrumbs.Add(new BreadcrumbItem { Text = "", Url = "/" });
+
+        var uri = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var segments = uri.Trim('/').Split('/');
+
+        var breadcrumbNames = new List<string>();
+        FindBreadcrumbNames(Global.Menus, segments, 0, ref breadcrumbNames);
+        if (breadcrumbNames?.Count > 0)
+        {
+            foreach (var item in breadcrumbNames)
+            {
+                breadcrumbs.Add(new BreadcrumbItem { Text = item });
+            }
+        }
+    }
+
+    private bool FindBreadcrumbNames(List<SystemMenu> menus, string[] segments, int index, ref List<string> breadcrumbNames)
+    {
+        if (index >= segments.Length)
+        {
+            return false;
+        }
+
+        foreach (var menu in menus)
+        {
+            var menusplit = menu.Path.Trim('/').Split('/');
+            //var menuPath = menu.Path.Trim('/');
+            if (menusplit[index] == segments[index])
+            {
+                breadcrumbNames.Add(menu.Name);
+                if (index == segments.Length - 1 || (menu.Children != null && FindBreadcrumbNames(menu.Children, segments, index + 1, ref breadcrumbNames)))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public class BreadcrumbItem
+    {
+        public string Text { get; set; }
+        public string Url { get; set; }
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}

@@ -1,0 +1,66 @@
+@namespace EasyTemplate.Blazor.Web.Components.Pages.Account.Setting
+
+<style>
+    .ant-table-thead {
+        display: none;
+    }
+</style>
+
+<Table @ref="_Table"
+       TItem="BindingItem"
+       HidePagination="true"
+       DataSource="DataSource"
+       Class="no-header-table">
+    <ColumnDefinitions Context="row">
+        <PropertyColumn Width="30" Property="c=>c.Avatar">
+            <Icon Type="@row.Avatar" Width="30" Height="30" Theme="IconThemeType.Outline" Class="@row.Avatar" />
+        </PropertyColumn>
+        <PropertyColumn Property="c=>c.Title">
+            <h3>@row.Title</h3>
+            <p>@row.Description</p>
+        </PropertyColumn>
+        <ActionColumn Width="180">
+            <Button OnClick="() => Bind(row)">绑定</Button>
+        </ActionColumn>
+    </ColumnDefinitions>
+</Table>
+
+@inject SqlSugarRepository<SystemUser> _User;
+@inject IMessageService MessageService;
+
+@code
+{
+    /// <summary>
+    ///
+    /// </summary>
+    private ITable _Table;
+    /// <summary>
+    ///
+    /// </summary>
+    private List<BindingItem> DataSource = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var user = _User.AsQueryable().Where(x => x.Id == Global.CurrentUser.Id).First();
+            DataSource.Add(new BindingItem { Avatar = "google", Title = "绑定谷歌账号", Description = !string.IsNullOrWhiteSpace(user.BindingGoogle) ? "已绑定" : "未绑定" });
+            DataSource.Add(new BindingItem { Avatar = "twitter", Title = "绑定X账号", Description = !string.IsNullOrWhiteSpace(user.BindingX) ? "已绑定" : "未绑定" });
+            DataSource.Add(new BindingItem { Avatar = "facebook", Title = "绑定Facebook账号", Description = !string.IsNullOrWhiteSpace(user.BindingFacebook) ? "已绑定" : "未绑定" });
+
+            StateHasChanged();
+        }
+    }
+
+    private void Bind(BindingItem item)
+    {
+        MessageService.Info($"正在编辑：{item.Title}");
+    }
+
+    public class BindingItem
+    {
+        public string Avatar { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+    }
+} 

@@ -1,0 +1,35 @@
+@namespace EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts
+
+<AntDesign.Charts.Column @ref="_chart" Config="_chartConfig" />
+
+@code
+{
+    private IChartComponent _chart;
+    private ColumnConfig _chartConfig = new ColumnConfig
+    {
+        XField = "x",
+        YField = "y",
+        Height = 45,
+        Padding = new[] { 8, 8, 8, 8 },
+        AutoFit = true,
+        XAxis = new CatAxis
+        {
+            Visible = false
+        },
+        YAxis = new ValueAxis
+        {
+            Visible = false
+        }
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var json = File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}\\wwwroot\\data\\fake_chart_data.json");
+            var data = json.ToEntity<ChartData>();
+            await _chart.ChangeData(data.VisitData);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

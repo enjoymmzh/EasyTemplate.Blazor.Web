@@ -1,0 +1,82 @@
+﻿@namespace EasyTemplate.Blazor.Web.Components.Layout
+
+@inherits LayoutComponentBase
+
+<AntDesign.ProLayout.BasicLayout Logo="@("https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg")"
+MenuData="_MenuData"
+MenuAccordion
+@bind-Collapsed="collapsed">
+    <HeaderContentRender>
+        <Space Size="SpaceSize.Middle" Align="SpaceAlign.Center">
+            <SpaceItem>
+                <Button Icon="@(collapsed?IconType.Outline.MenuUnfold:IconType.Outline.MenuFold)" Type="ButtonType.Link" OnClick="Toggle" />
+            </SpaceItem>
+            <SpaceItem>
+                <Breadcrumb>
+                    <EasyTemplate.Blazor.Web.Components.GlobalHeader.SmartBreadcrumb />
+                </Breadcrumb>
+            </SpaceItem>
+            <SpaceItem>
+                <Button Icon="@IconType.Outline.Reload" Type="ButtonType.Link" OnClick="Reload" />
+            </SpaceItem>
+        </Space>
+    </HeaderContentRender>
+    <RightContentRender>
+        <EasyTemplate.Blazor.Web.Components.RightContent />
+    </RightContentRender>
+    <ChildContent>
+        <ReuseTabs />
+    </ChildContent>
+    <FooterRender>
+        <FooterView Copyright="@CopyRight" Links="Links" />
+    </FooterRender>
+</AntDesign.ProLayout.BasicLayout>
+
+<SettingDrawer />
+
+@inject ReuseTabsService _TabService;
+
+@code {
+
+    /// <summary>
+    ///
+    /// </summary>
+    private bool collapsed;
+    /// <summary>
+    /// 
+    /// </summary>
+    public LinkItem[] Links =
+    {
+            new LinkItem
+            {
+                Key = "Ant Design Blazor",
+                Title = "Ant Design Blazor参考",
+                Href = "https://antblazor.com/zh-CN",
+                BlankTarget = true,
+            },
+            new LinkItem
+            {
+                Key = "gitee",
+                Title = "Gitee链接",
+                Href = "https://gitee.com/allofyouenemies/EasyTemplate.Blazor.Web",
+                BlankTarget = true,
+            },
+            new LinkItem
+            {
+                Key = "Author",
+                Title = "作者主页",
+                Href = "https://gitee.com/allofyouenemies",
+                BlankTarget = true,
+            }
+    };
+
+    private void Toggle()
+    {
+        collapsed = !collapsed;
+    }
+
+    private void Reload()
+    {
+        _TabService.ReloadPage();
+    }
+}

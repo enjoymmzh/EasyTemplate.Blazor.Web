@@ -1,0 +1,99 @@
+﻿@page "/system/menu"
+@using AntDesign.TableModels
+@attribute [ReuseTabsPage(Title = "菜单管理")]
+
+<Spin Spinning="Loading">
+    <Table @ref="_Table" AutoHeight TItem="SystemMenu" DataSource="_DataSource" @bind-PageSize="Ps" @bind-PageIndex="Pi"
+           TreeChildren="item=>item.Children" @bind-SelectedRows="_SelectedRows" OnChange="OnChange">
+        <ColumnDefinitions Context="row">
+            <PropertyColumn Align="ColumnAlign.Left" Property="c => c.Name" Title="菜单名称" />
+            <PropertyColumn Align="ColumnAlign.Left" Property="c => c.Path" Title="路由" />
+            <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.Necessary">
+                @{
+                    var tag = row.Necessary ? "必需" : "非必需";
+                    var color = row.Necessary ? TagColor.Green : TagColor.Blue;
+                }
+                <Tag Color="@color">@tag</Tag>
+            </PropertyColumn>
+            <PropertyColumn Align="ColumnAlign.Center" Property="c => c.Key" Title="自定义唯一键值" />
+            <PropertyColumn Align="ColumnAlign.Center" Property="c => c.Icon" Title="图标">
+                @{
+                    var type = row.Icon;
+                }
+                <Icon Type="@type" Theme="IconThemeType.Outline" />
+            </PropertyColumn>
+            <PropertyColumn Align="ColumnAlign.Center" Property="c => c.Sort" Title="排序" />
+        </ColumnDefinitions>
+        <PaginationTemplate>
+            <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                        Total="context.Total"
+                        PageSize="context.PageSize"
+                        Current="context.PageIndex"
+                        ShowSizeChanger
+                        OnChange="context.HandlePageChange" />
+        </PaginationTemplate>
+    </Table>
+</Spin>
+
+@inject ModalService ModalService;
+@inject ConfirmService ComfirmService;
+@inject IMessageService _Message;
+@inject NavigationManager NavigationManager;
+@inject SqlSugarRepository<SystemMenu> _Repository;
+@inject IJSRuntime IJSRuntime;
+
+@code {
+
+    /// <summary>
+    ///
+    /// </summary>
+    private ITable _Table;
+    /// <summary>
+    ///
+    /// </summary>
+    private IEnumerable<SystemMenu> _SelectedRows = [];
+    /// <summary>
+    ///
+    /// </summary>
+    private List<SystemMenu> _DataSource;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Pi = 1;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Ps = 20;
+    /// <summary>
+    ///
+    /// </summary>
+    private bool Loading = false;
+
+    /// <summary>
+    /// 查
+    /// </summary>
+    /// <returns></returns>
+    private async Task Query()
+    {
+        Loading = true;
+        _DataSource = await _Repository.AsQueryable().OrderBy(x => x.Sort).ToTreeAsync(x => x.Children, x => x.ParentId, 0);
+        Loading = false;
+    }
+
+    protected override async void OnInitialized()
+    {
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await NavigationManager.RedirectLogin(IJSRuntime);
+            await Query();
+        }
+    }
+
+    private async Task OnChange(QueryModel<SystemMenu> query)
+        => await Query();
+}

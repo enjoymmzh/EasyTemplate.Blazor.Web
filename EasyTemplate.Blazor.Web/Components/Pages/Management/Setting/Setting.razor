@@ -1,0 +1,64 @@
+﻿@page "/system/setting"
+@attribute [ReuseTabsPage(Title = "系统设置")]
+
+<Spin Spinning="Loading">
+    <Form @ref="_Form" Model="@_DataSource" LabelColSpan="6" WrapperColSpan="12">
+        <FormItem Label="公司名称">
+            <Input @bind-Value="@context.CompanyName" />
+        </FormItem>
+        <FormItem Label="社会统一信用代码">
+            <Input @bind-Value="@context.CompanyNo" />
+        </FormItem>
+        <FormItem Label="CopyRight">
+            <Input @bind-Value="@context.CopyRight" />
+        </FormItem>
+        <FormItem Label="注册日期">
+            <DatePicker @bind-Value="@context.RegisterDate" Picker="DatePickerType.Date" />
+        </FormItem>
+        <FormItem Label="联系电话">
+            <Input @bind-Value="@context.ContactPhone" />
+        </FormItem>
+        <FormItem Label="联系邮箱">
+            <Input @bind-Value="@context.ContactEmail" />
+        </FormItem>
+        <FormItem Label="网站URL">
+            <Input @bind-Value="@context.WebsiteUrl" />
+        </FormItem>
+        <FormItem Label="地区">
+            <Cascader Options="@Areas" @bind-Value="@context.LastAreadId" SelectedNodesChanged="OnChange" />
+        </FormItem>
+        <FormItem Label="地址">
+            <Input @bind-Value="@context.Address" />
+        </FormItem>
+        <FormItem WrapperColOffset="8" WrapperColSpan="12">
+            <Button Type="ButtonType.Primary" Color="Color.Blue6" OnClick="Update">更新</Button>
+        </FormItem>
+    </Form>
+</Spin>
+
+@inject ModalService ModalService;
+@inject ConfirmService ComfirmService;
+
+@code {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private IForm _Form;
+    /// <summary>
+    /// 
+    /// </summary>
+    private SystemSetting _DataSource;
+    /// <summary>
+    ///
+    /// </summary>
+    private IEnumerable<SystemArea> _selectedRows = [];
+    /// <summary>
+    ///
+    /// </summary>
+    private List<SystemArea> _dataSource;
+    /// <summary>
+    ///
+    /// </summary>
+    private bool Loading = false;
+}

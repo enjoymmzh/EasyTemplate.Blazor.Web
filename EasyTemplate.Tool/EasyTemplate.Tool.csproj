@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
+    <PackageReference Include="Caching.CSRedis" Version="3.8.800" />
+    <PackageReference Include="CSRedisCore" Version="3.8.803" />
+    <PackageReference Include="CsvHelper" Version="33.0.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Masuit.Tools.Core" Version="2024.3.4" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+    <PackageReference Include="RabbitMQ.Client.Core.DependencyInjection" Version="5.0.0" />
+    <PackageReference Include="RestSharp" Version="106.15.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.154" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+    <PackageReference Include="AntDesign" Version="1.2.1" />
+    <PackageReference Include="AntDesign.Charts" Version="0.5.7" />
+    <PackageReference Include="AntDesign.Extensions.Localization" Version="1.2.1" />
+    <PackageReference Include="AntDesign.ProLayout" Version="1.2.1" />
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Configuration\App.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configuration\DataBase.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

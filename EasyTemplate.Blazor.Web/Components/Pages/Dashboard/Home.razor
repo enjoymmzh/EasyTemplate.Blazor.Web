@@ -1,0 +1,230 @@
+﻿@page "/"
+@using EasyTemplate.Tool.Util
+@attribute [ReuseTabsPage(Title = "主页", Pin = true, Closable = false, Order = 0)]
+
+<GridContent>
+    <Row Type="flex" Gutter="24">
+        <AntDesign.Col Xs="24" Sm="12" Md="12" Lg="12" Xl="6" Style="margin-bottom: 24px;">
+            <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.ChartCard Title="Total Sales"
+                       Total="$ 126,560"
+                       ContentHeight="46">
+                <ChildContent>
+                    <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Trend Flag="up">
+                        WoW Change
+                        <span class="trendText">12%</span>
+                    </EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Trend>
+                    <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Trend Flag="down">
+                        DoD Change
+                        <span class="trendText">11%</span>
+                    </EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Trend>
+                </ChildContent>
+                <Footer>
+                    <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.Field Label="Daily Sale" Value="$12,423" />
+                </Footer>
+            </EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.ChartCard>
+        </AntDesign.Col>
+        <AntDesign.Col Xs="24" Sm="12" Md="12" Lg="12" Xl="6" Style="margin-bottom: 24px;">
+            <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.ChartCard Title="今日Api访问次数"
+                                                                                            Total="@SystemStatistics.ApiDaily.ToString()"
+                       ContentHeight="46">
+                <ChildContent>
+                    <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.MiniArea />
+                </ChildContent>
+                <Footer>
+                    <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.Field Label="Api访问总数" Value="@SystemStatistics.ApiTotal.ToString()" />
+                </Footer>
+            </EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.ChartCard>
+        </AntDesign.Col>
+        <AntDesign.Col Xs="24" Sm="12" Md="12" Lg="12" Xl="6" Style="margin-bottom: 24px;">
+            <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.ChartCard Title="Payments"
+                       Total="6560"
+                       ContentHeight="46">
+                <ChildContent>
+                    <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.MiniBar />
+                </ChildContent>
+                <Footer>
+                    <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.Field Label="Conversion Rate" Value="60%" />
+                </Footer>
+            </EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.ChartCard>
+        </AntDesign.Col>
+        <AntDesign.Col Xs="24" Sm="12" Md="12" Lg="12" Xl="6" Style="margin-bottom: 24px;">
+            <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.ChartCard Title="Operational Effect"
+                       Total="78%"
+                       ContentHeight="46">
+                <ChildContent>
+                    <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.MiniProgress Percent="78" 
+                        StrokeWidth="8" 
+                        Target="80" 
+                        Color="#13C2C2" />
+                </ChildContent>
+                <Footer>
+                    <EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.Field Label="Conversion Rate" Value="60%" />
+                </Footer>
+            </EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts.ChartCard>
+        </AntDesign.Col>
+    </Row>
+    <div class="salesCard">
+        <Card>
+            <Tabs ActiveKeyChanged="OnTabChanged" TabBarStyle="margin-bottom: 24px;">
+                <TabPane Key="1" Tab="服务管理">
+                    <Descriptions Bordered>
+                        <DescriptionsItem Title="Mysql服务" Span="3">
+                            <Badge Status="BadgeStatus.Success" Text="运行中"></Badge>
+                        </DescriptionsItem>
+                        <DescriptionsItem Title="服务1" Span="3">
+                            <Badge Status="BadgeStatus.Error" Text="未运行"></Badge>
+                        </DescriptionsItem>
+                        <DescriptionsItem Title="服务2" Span="3">
+                            <Badge Status="BadgeStatus.Processing" Text="启动中"></Badge>
+                        </DescriptionsItem>
+                    </Descriptions>
+                </TabPane>
+                <TabPane Key="2" Tab="服务器信息">
+                    <Descriptions Bordered>
+                        <DescriptionsItem Title="服务器名称" Span="3">@Environment.MachineName</DescriptionsItem>
+                        <DescriptionsItem Title="总内存" Span="3">@computer.TotalRAM</DescriptionsItem>
+                        <DescriptionsItem Title="操作系统" Span="3">@System.Runtime.InteropServices.RuntimeInformation.OSDescription</DescriptionsItem>
+                        <DescriptionsItem Title="系统架构" Span="3">@System.Runtime.InteropServices.RuntimeInformation.OSArchitecture</DescriptionsItem>
+                        <DescriptionsItem Title="硬盘空间" Span="3">2T</DescriptionsItem>
+
+@*                         <DescriptionsItem Title="Product" Span="3">@computer.CPURate</DescriptionsItem>
+                        <DescriptionsItem Title="Billing Mode" Span="3">@computer.RAMRate</DescriptionsItem>
+                        <DescriptionsItem Title="Automatic Renewal" Span="3">@computer.RunTime</DescriptionsItem>
+
+                        <DescriptionsItem Title="Discount">$20.00</DescriptionsItem>
+                        <DescriptionsItem Title="Official Receipts">$60.00</DescriptionsItem>
+                        <DescriptionsItem Title="Config Info">
+                            Data disk type: MongoDB
+                            <br />
+                            Database version: 3.4
+                            <br />
+                            Package: dds.mongo.mid
+                            <br />
+                            Storage space: 10 GB
+                            <br />
+                            Replication_factor:3
+                            <br />
+                            Region: East China 1<br />
+                        </DescriptionsItem> *@
+                    </Descriptions>
+                </TabPane>
+                <TabPane Key="3" Tab="项目框架">
+                    <Descriptions Bordered>
+                        <DescriptionsItem Title="环境变量" Span="3">@Environment.MachineName</DescriptionsItem>
+                        <DescriptionsItem Title=".Net版本" Span="3">@System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription</DescriptionsItem>
+                        <DescriptionsItem Title="启动时间" Span="3">@System.Diagnostics.Process.GetCurrentProcess().StartTime.ToString("yyyy-MM-dd HH:mm:ss")</DescriptionsItem>
+
+@*                         <DescriptionsItem Title="Product">Cloud Database</DescriptionsItem>
+                        <DescriptionsItem Title="Billing Mode">Prepaid</DescriptionsItem>
+                        <DescriptionsItem Title="Automatic Renewal">YES</DescriptionsItem>
+                        <DescriptionsItem Title="Order Time">
+                            2018-04-24 18:00:00
+                        </DescriptionsItem>
+                        <DescriptionsItem Title="Usage Time" Span="2">
+                            2018-04-24 18:00:00 To 2019-04-24 18:00:00
+                        </DescriptionsItem>
+                        <DescriptionsItem Title="Status" Span="3">
+                            <Badge Status="BadgeStatus.Processing" Text="Running"></Badge>
+                        </DescriptionsItem>
+                        <DescriptionsItem Title="Negotiated Amount">$80.00</DescriptionsItem>
+                        <DescriptionsItem Title="Discount">$20.00</DescriptionsItem>
+                        <DescriptionsItem Title="Official Receipts">$60.00</DescriptionsItem>
+                        <DescriptionsItem Title="Config Info">
+                            Data disk type: MongoDB
+                            <br />
+                            Database version: 3.4
+                            <br />
+                            Package: dds.mongo.mid
+                            <br />
+                            Storage space: 10 GB
+                            <br />
+                            Replication_factor:3
+                            <br />
+                            Region: East China 1<br />
+                        </DescriptionsItem> *@
+                    </Descriptions>
+                </TabPane>
+            </Tabs>
+        </Card>
+        </div>
+</GridContent>
+
+@inject NavigationManager NavigationManager;
+@inject IMessageService MessageService;
+@inject IJSRuntime IJSRuntime;
+@inject SqlSugarRepository<SystemLogApi> _LogApi;
+
+@code {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private SystemStatistics SystemStatistics = new SystemStatistics();
+    /// <summary>
+    ///
+    /// </summary>
+    private ComputerInfo computer = new ComputerInfo();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await NavigationManager.RedirectLogin(IJSRuntime);
+            await Statistics();
+            await Information();
+        }
+    }
+
+    private async Task Statistics()
+    {
+        SystemStatistics.ApiDaily = await Cache.Get<int>($"request_{DateTime.Now.ToString("yyyyMMdd")}"); 
+        SystemStatistics.ApiTotal = await Cache.Get<int>($"request_total"); 
+    }
+
+    private async Task Information()
+    {
+        //windows环境
+        computer = Computer.GetComputerInfo();
+        var arm = computer.RAMRate;
+        var cpu = computer.CPURate;
+        var iis = computer.RunTime;
+        var TotalRAM = computer.TotalRAM;
+        string ip = Web.GetWanIp();
+        string ipLocation = Web.GetIpLocation(ip);
+        var IP = string.Format("{0} ({1})", ip, ipLocation);
+    }
+
+    IChartComponent chart1;
+
+    private async Task OnTabChanged(string activeKey)
+    {
+        if (activeKey == "1")
+        {
+            
+        }
+        //    await _saleChart.ChangeData(data.SalesData);
+        //else
+        //    await _visitChart.ChangeData(data.SalesData);
+    }
+
+    private async Task onChart1_FirstRender(IChartComponent chart)
+    {
+        //var data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
+        //chart1.ChangeData(data1);
+    }
+
+    readonly AreaConfig config1 = new AreaConfig()
+        {
+            XField = "Date",
+            YField = "scales",
+            XAxis = new ValueCatTimeAxis()
+            {
+                Range = new[] { 0, 1 },
+                TickCount = 5
+            },
+            AreaStyle = new GraphicStyle()
+            {
+                Fill = "l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff"
+            }
+        };
+}

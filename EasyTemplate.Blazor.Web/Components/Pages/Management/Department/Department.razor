@@ -1,0 +1,145 @@
+﻿@page "/system/department"
+@attribute [ReuseTabsPage(Title = "部门管理")]
+
+<Spin Spinning="Loading">
+    <Table @ref="_Table" AutoHeight TItem="SystemDepartment" @bind-PageSize="Ps"
+           @bind-PageIndex="Pi" Total="_total" DataSource="_dataSource" @bind-SelectedRows="_selectedRows" OnChange="OnChange">
+        <TitleTemplate>
+            <Flex Justify="FlexJustify.Start" Gap="@("10")">
+                <Input Width="300" Placeholder="输入名称" @bind-Value="@Q_Name" />
+                <Button OnClick="Search">搜索</Button>
+                <Button OnClick="ResetQuery">重置</Button>
+
+                <Button Type="ButtonType.Primary" Color="Color.Green6" OnClick="() => StartEdit(default)">新增</Button>
+            </Flex>
+        </TitleTemplate>
+        <ColumnDefinitions Context="row">
+            <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.Id" Width="100" Title="ID" />
+            <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.Name" Title="部门名称" />
+            <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.Leader" Title="部门领导" />
+            <PropertyColumn Align="ColumnAlign.Center" Property="c => c.CreateTime" Title="创建时间">
+                @{
+                    var formattedTime = row.CreateTime?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A";
+                }
+                @formattedTime
+            </PropertyColumn>
+            <ActionColumn Title="操作">
+                <Button Type="ButtonType.Primary" Color="Color.Blue6" OnClick="() => StartEdit(row)">编辑</Button>
+                <Button Type="ButtonType.Primary" Color="Color.Red6" Danger OnClick="() => Delete(row)">删除</Button>
+            </ActionColumn>
+        </ColumnDefinitions>
+        <PaginationTemplate>
+            <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                        Total="context.Total"
+                        PageSize="context.PageSize"
+                        Current="context.PageIndex"
+                        ShowSizeChanger
+                        OnChange="context.HandlePageChange" />
+        </PaginationTemplate>
+    </Table>
+</Spin>
+
+@inject ModalService ModalService;
+@inject ConfirmService ComfirmService;
+@inject IMessageService _message;
+
+@code {
+
+    /// <summary>
+    ///
+    /// </summary>
+    private ITable _Table;
+    /// <summary>
+    ///
+    /// </summary>
+    private IEnumerable<SystemDepartment> _selectedRows = [];
+    /// <summary>
+    ///
+    /// </summary>
+    private List<SystemDepartment> _dataSource;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Pi = 1;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Ps = 10;
+    /// <summary>
+    ///
+    /// </summary>
+    private int _total;
+    /// <summary>
+    ///
+    /// </summary>
+    private bool Loading = false;
+
+    private void StartEdit(SystemDepartment row)
+    {
+        var data = row ?? new();
+        ModalRef<bool> modalRef = default;
+        IForm form = default;
+        modalRef = ModalService.CreateModal<bool>(new()
+                {
+                    Title = data.Id > 0 ? "编辑" : "新增",
+                    Content =
+    @<Form @ref="form" Model="data" OnFinish="()=> modalRef.OkAsync(true)" LabelColSpan="6" WrapperColSpan="18">
+        <FormItem Label="部门名称" Required>
+            <Input @bind-Value="@data.Name" />
+        </FormItem>
+        <FormItem Label="部门领导">
+            <Input @bind-Value="@data.Leader" />
+        </FormItem>
+        <FormItem Label="是否启用" Required>
+            <Select @bind-Value="@data.Enabled"
+                    TItemValue="bool"
+                    TItem="string"
+                    DefaultActiveFirstOption="false">
+                <SelectOptions>
+                    <SelectOption TItemValue="bool" TItem="string" Value="true" Label="启用" />
+                    <SelectOption TItemValue="bool" TItem="string" Value="false" Label="禁用" />
+                </SelectOptions>
+            </Select>
+        </FormItem>
+    </Form>,
+            OnOk = async (e) =>
+            {
+                if (!form.Validate())
+                {
+                    return;
+                }
+
+                modalRef.SetConfirmLoading(true);
+
+                var flag = await InsertOrUpdate(data);
+                if (flag)
+                {
+                    await _message.Success("操作成功");
+                }
+                else
+                {
+                    await _message.Error("操作失败");
+                }
+
+                await modalRef.CloseAsync();
+                _Table.ReloadData(Pi, Ps);
+                StateHasChanged();
+            },
+            OnCancel = async (e) =>
+            {
+                if (form.IsModified && (!await Comfirm("已修改内容，确定退出吗?")))
+                {
+                    return;
+                }
+                await modalRef.CloseAsync();
+            }
+        });
+    }
+
+    private async Task<bool> Comfirm(string message)
+    {
+        return await ComfirmService.Show(message, "提示", ConfirmButtons.YesNo, ConfirmIcon.Warning) == ConfirmResult.Yes;
+    }
+
+
+}

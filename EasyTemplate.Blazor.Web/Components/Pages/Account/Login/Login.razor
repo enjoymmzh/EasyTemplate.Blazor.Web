@@ -1,0 +1,54 @@
+﻿@namespace EasyTemplate.Blazor.Web.Components.Pages.Account.Login
+@layout CoverLayout
+@page "/account/login"
+@attribute [ReuseTabsPage(Ignore = true)]
+
+<div class="main__b__0">
+    <div class="login">
+        <Form Model="@_Model" OnFinish="()=> HandleSubmit()">
+            <Tabs ActiveKey="@context.LoginType">
+                <TabPane Key="1" Tab="账号登录">
+                    <FormItem>
+                        <AntDesign.Input Placeholder="账号: admin" Size="InputSize.Large" @bind-Value="@context.Account">
+                            <Prefix><Icon Type="user" /></Prefix>
+                        </AntDesign.Input>
+                    </FormItem>
+                    <FormItem>
+                        <AntDesign.Input Placeholder="密码: 123456" Size="InputSize.Large" @bind-Value="@context.Password" Type="InputType.Password">
+                            <Prefix><Icon Type="lock" /></Prefix>
+                        </AntDesign.Input>
+                    </FormItem>
+                </TabPane>
+                <TabPane Key="2" Tab="手机登录">
+                    <FormItem>
+                        <AntDesign.Input Placeholder="输入手机号" Size="InputSize.Large" @bind-Value="@context.Mobile">
+                            <Prefix><Icon Type="mobile" /></Prefix>
+                        </AntDesign.Input>
+                    </FormItem>
+                    <FormItem>
+                        <InputGroup Compact>
+                            <FormItem NoStyle>
+                                <AntDesign.Input Width="228" Placeholder="输入验证码" Size="InputSize.Large" @bind-Value="@context.VerifyCode" />
+                            </FormItem>
+                            <FormItem NoStyle>
+                                <Button Loading="_Loading" Icon="@IconType.Outline.Send" Size="ButtonSize.Large" OnClick="SendSM">发送验证码</Button>
+                            </FormItem>
+                        </InputGroup>
+                    </FormItem>
+                </TabPane>
+            </Tabs>
+            <div>
+                <Checkbox Checked="@context.AutoLogin" @bind-Value="@context.AutoLogin">
+                    自动登录
+                </Checkbox>
+                <a style="float: right;">
+                   忘记密码
+                </a>
+            </div>
+            <Button Type="ButtonType.Primary" Loading="_LoginLoading" HtmlType="submit" Class="submit" Size=" ButtonSize.Large" Block>登录</Button>
+@*             <div class="other">
+                <a class="register" href="/account/register">没有账号？我要注册</a>
+            </div> *@
+        </Form>
+    </div>
+</div>

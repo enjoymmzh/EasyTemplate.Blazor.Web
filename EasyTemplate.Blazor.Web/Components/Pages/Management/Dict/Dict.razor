@@ -1,0 +1,157 @@
+﻿@page "/system/dictionary"
+@attribute [ReuseTabsPage(Title = "字典管理")]
+
+<Spin Spinning="Loading">
+    <Table @ref="_Table" AutoHeight TItem="SystemDictionary" @bind-PageSize="Ps" @bind-PageIndex="Pi" Total="_total" DataSource="_dataSource" @bind-SelectedRows="_selectedRows" OnChange="OnChange">
+        <TitleTemplate>
+            <Flex Justify="FlexJustify.Start" Gap="@("10")">
+                <Input Width="300" Placeholder="输入名称" @bind-Value="@Q_Name" />
+                <Button OnClick="Search">搜索</Button>
+                <Button OnClick="ResetQuery">重置</Button>
+
+                <Button Type="ButtonType.Primary" Color="Color.Green6" OnClick="() => StartEdit(default)">新增</Button>
+            </Flex>
+        </TitleTemplate>
+        <ColumnDefinitions Context="row">
+            <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.Id" Width="100" Title="ID" />
+            <PropertyColumn Align="ColumnAlign.Left" Property="c=>c.KeyName" Title="键" />
+            <PropertyColumn Align="ColumnAlign.Left" Property="c=>c.ValueName" Title="值" />
+            <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.DicType" Title="字典类型" />
+            <PropertyColumn Align="ColumnAlign.Center" Property="c=>c.IsSystem" Title="系统参数">
+                @{
+                    TagColor color = TagColor.Green;
+                    string tagText = "是";
+                    if (row.IsSystem)
+                    {
+                        color = TagColor.Green;
+                        tagText = "是";
+                    }
+                    else
+                    {
+                        color = TagColor.Blue;
+                        tagText = "否";
+                    }
+                }
+                <Tag Color="@color">@tagText</Tag>
+            </PropertyColumn>
+            <PropertyColumn Align="ColumnAlign.Center" Property="c => c.CreateTime" Title="创建时间">
+                @{
+                    var formattedTime = row.CreateTime?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A";
+                }
+                @formattedTime
+            </PropertyColumn>
+            <ActionColumn Title="操作">
+                <Button Type="ButtonType.Primary" Color="Color.Blue6" OnClick="() => StartEdit(row)">编辑</Button>
+                <Button Type="ButtonType.Primary" Color="Color.Red6" Danger OnClick="() => Delete(row)">删除</Button>
+            </ActionColumn>
+        </ColumnDefinitions>
+        <PaginationTemplate>
+            <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                        Total="context.Total"
+                        PageSize="context.PageSize"
+                        Current="context.PageIndex"
+                        ShowSizeChanger
+                        OnChange="context.HandlePageChange" />
+        </PaginationTemplate>
+    </Table>
+</Spin>
+
+@inject ModalService ModalService;
+@inject ConfirmService ComfirmService;
+@inject IMessageService MessageService;
+
+@code {
+
+    /// <summary>
+    ///
+    /// </summary>
+    private ITable _Table;
+    /// <summary>
+    ///
+    /// </summary>
+    private IEnumerable<SystemDictionary> _selectedRows = [];
+    /// <summary>
+    ///
+    /// </summary>
+    private List<SystemDictionary> _dataSource;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Pi = 1;
+    /// <summary>
+    ///
+    /// </summary>
+    private int Ps = 10;
+    /// <summary>
+    ///
+    /// </summary>
+    private int _total;
+    /// <summary>
+    ///
+    /// </summary>
+    private bool Loading = false;
+
+
+    private void StartEdit(SystemDictionary row)
+    {
+        var data = row ?? new();
+        ModalRef<bool> modalRef = default;
+        IForm form = default;
+        modalRef = ModalService.CreateModal<bool>(new()
+                {
+                    Title = data.Id > 0 ? "编辑" : "新增",
+                    Content =
+    @<Form @ref="form" Model="data" OnFinish="()=> modalRef.OkAsync(true)" LabelColSpan="6" WrapperColSpan="18">
+        <FormItem Label="键" Required>
+            <Input @bind-Value="@context.KeyName" />
+        </FormItem>
+        <FormItem Label="值" Required>
+            <Input @bind-Value="@context.ValueName" />
+        </FormItem>
+        <FormItem Label="字典类型" Required>
+            <Input @bind-Value="@context.DicType" />
+        </FormItem>
+        <FormItem Label="系统参数" Required>
+            <Checkbox @bind-Value="@context.IsSystem" />
+        </FormItem>
+    </Form>,
+            OnOk = async (e) =>
+            {
+                if (!form.Validate())
+                {
+                    return;
+                }
+
+                modalRef.SetConfirmLoading(true);
+
+                var flag = await InsertOrUpdate(data);
+                if (flag)
+                {
+                    await MessageService.Success("操作成功");
+                }
+                else
+                {
+                    await MessageService.Error("操作失败");
+                }
+
+                await modalRef.CloseAsync();
+                _Table.ReloadData(Pi, Ps);
+                StateHasChanged();
+            },
+            OnCancel = async (e) =>
+            {
+                if (form.IsModified && (!await Comfirm("已修改内容，确定退出吗?")))
+                {
+                    return;
+                }
+                await modalRef.CloseAsync();
+            }
+        });
+    }
+
+    private async Task<bool> Comfirm(string message)
+    {
+        return await ComfirmService.Show(message, "提示", ConfirmButtons.YesNo, ConfirmIcon.Warning) == ConfirmResult.Yes;
+    }
+
+}

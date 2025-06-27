@@ -1,0 +1,24 @@
+﻿@page "/app/product"
+@attribute [ReuseTabsPage(Title = "产品管理")]
+
+<Spin Spinning="Loading">
+    <Table @ref="_Table" AutoHeight TItem="SystemMenu" DataSource="_DataSource" @bind-PageSize="Ps" @bind-PageIndex="Pi"
+           TreeChildren="item=>item.Children" @bind-SelectedRows="_SelectedRows" OnChange="OnChange">
+        <ColumnDefinitions Context="row">
+            <PropertyColumn Property="c => c.Name" Title="菜单名称" />
+            <PropertyColumn Property="c => c.Path" Title="路由" />
+        </ColumnDefinitions>
+        <PaginationTemplate>
+            <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                        Total="context.Total"
+                        PageSize="context.PageSize"
+                        Current="context.PageIndex"
+                        ShowSizeChanger
+                        OnChange="context.HandlePageChange" />
+        </PaginationTemplate>
+    </Table>
+</Spin>
+
+@inject NavigationManager NavigationManager;
+@inject SqlSugarRepository<SystemMenu> _Repository;
+@inject IJSRuntime IJSRuntime;

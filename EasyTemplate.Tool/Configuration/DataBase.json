@@ -1,0 +1,32 @@
+{
+  "Cache": {
+    "CacheType": "MemoryCache", // RedisCache / MemoryCache
+    "RedisConnectionString": "127.0.0.1:6379,password=,defaultDatabase=4",
+    "InstanceName": ""
+  },
+  "DbConnection": {
+    "EnableConsoleSql": true, //启用控制台打印SQL
+    "ConnectionConfigs": [
+      {
+        "ConfigId": "0", //默认库标识-禁止修改
+        "DbType": "MySql", //MySql、SqlServer、Sqlite、Oracle、PostgreSQL、Dm、Kdbndp、Oscar、MySqlConnector、Access、OpenGauss、QuestDB、HG、ClickHouse、GBase、Odbc、Custom
+        "ConnectionString": "Data Source=localhost;Port=3306;Initial Catalog=thesystem;Persist Security Info=True;User ID=root;Password=123456;Pooling=True;charset=utf8mb4;MAX Pool Size=200;Min Pool Size=1;Connection Lifetime=30;AllowLoadLocalInfile=true;", // 库连接字符串
+        //"ConnectionString": "Data Source=./thesystem.db",
+        "DbSettings": {
+          "EnableDiffLog": true, //启用库表差异日志
+          "EnableInitDb": false, //启用库初始化
+          "EnableUnderLine": true //启用驼峰转下划线
+        },
+        "TableSettings": {
+          "EnableInitTable": true, // 启用表初始化
+          "EnableIncreTable": false, //启用表增量更新-特性[IncreTable]
+          "EnableUnderLine": true // 启用驼峰转下划线
+        },
+        "SeedSettings": {
+          "EnableInitSeed": true, // 启用种子初始化
+          "EnableIncreSeed": false //启用种子增量更新-特性[IncreSeed]
+        }
+      }
+    ]
+  }
+}

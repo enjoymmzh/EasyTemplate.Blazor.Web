@@ -1,0 +1,36 @@
+@namespace EasyTemplate.Blazor.Web.Components.Pages.Dashboard.Components.Charts
+
+<Area @ref="_visitChart" Config="_visitChartConfig" />
+
+@code
+{
+    private IChartComponent _visitChart;
+
+    private readonly AreaConfig _visitChartConfig = new AreaConfig
+    {
+        XField = "x",
+        YField = "y",
+        Height = 45,
+        Padding = new[] { 8, 8, 8, 8 },
+        AutoFit = true,
+        XAxis = new ValueCatTimeAxis
+        {
+            Visible = false
+        },
+        YAxis = new ValueAxis
+        {
+            Visible = false
+        }
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var json = File.ReadAllText($"{AppDomain.CurrentDomain.BaseDirectory}\\wwwroot\\data\\fake_chart_data.json");
+            var data = json.ToEntity<ChartData>();
+            await _visitChart.ChangeData(data.VisitData);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

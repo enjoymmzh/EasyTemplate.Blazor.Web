@@ -1,0 +1,34 @@
+﻿@namespace EasyTemplate.Blazor.Web.Components
+@inherits AntDomComponentBase
+
+<Space Class="@ClassMapper.Class" Size="SpaceSize.Middle" Align="SpaceAlign.Center">
+    <SpaceItem >
+        <NoticeIcon  ClearText="清空"
+                    ViewMoreText="更多"
+                    Count="_count"
+                    OnClear="HandleClear"
+                    OnViewMore="HandleViewMore">
+            <NoticeList TabKey="message"
+                        OnItemClick="Seen"
+                        Title="消息"
+                        EmptyText="暂无消息"
+                        ShowViewMore
+                        Data="_messages" />
+            <NoticeList TabKey="notification"
+                        OnItemClick="Seen"
+                        Title="提醒"
+                        EmptyText="暂无提醒"
+                        ShowViewMore
+                        Data="_notifications" />
+        </NoticeIcon>
+    </SpaceItem>
+    <SpaceItem>
+        <AvatarDropdown Name="@_currentUser?.NickName"
+                        Avatar="@_currentUser?.Avatar"
+                        MenuItems="@AvatarMenuItems"
+                        OnItemSelected="HandleSelectUser" />
+    </SpaceItem>
+    @*     <SpaceItem>
+        <SelectLang OnItemSelected="HandleSelectLang" />
+    </SpaceItem> *@
+</Space>
