@@ -31,14 +31,14 @@
     "PasswordStrengthValidation": "(?=^.{6,16}$)(?=.*\\d)(?=.*\\W+)(?=.*[A-Z])(?=.*[a-z])(?!.*\\n).*$", // 密码强度验证正则表达式，必须须包含大小写字母、数字和特殊字符的组合，长度在6-16之间
     "PasswordStrengthValidationMsg": "密码必须包含大小写字母、数字和特殊字符的组合，长度在6-16之间", // 密码强度验证消息提示
     "CryptoType": "SM2", // 密码加密算法：MD5、SM2、SM4
-    "Sm2PublicKey": "04b6ef9797decb63f8a6457f2fd7e097e3b1a9c26f5d39ee847c73c622bd16c23197fb5f54fce1d60f941e3404f452a0ceff6f7cf8d84d5c32708fd594bfe899d2", //公钥
-    "Sm2PrivateKey": "2b6a10e3ddbsd4b140c6e9c0962aef095850e03c52041c4dfb701007e82a755d", //私钥
-    "Sm2CompressedPublicKey": "02c6ef97972ecb63f8a6457f2fd7e097e3b1a9c26f5d39ee847c73c622bd16c231", //压缩公钥
-    "Sm4Key": "ec43d0f0f86e44eb8e768ac7f9aab6ac", //SM4KEY
-    "Sm4IV": "a44e1871907e45df9bba35ee6e4dd67c", //SM4IV
-    "AesKey": "2cb300f77aa749aabf99ea669b58b3e8", //AESKey
-    "DescKey": "0646cfbac8da44029324fc859430db68", //DESCKey
-    "RsaPublicKey": "MIIBIaANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzo8jqbbFQfrLuA/htTvH0rm9VRbJddRlwALCpzmA5E/9VmgiePkBTiJcjX1kGyRzs1Zv5i4begja9kvDebzFSd3g/jkzkuyI17uGnPeKhEIUqU7WQ6qWMzdR4HddFleCrm5taKTryALHR2xGZ95jA7+lRxNT2bWkhISzdblJZtdZ9RUGRBt/bH81+vqO0zQEau/LC2ZBn5GmJUOlNO5uov5VY5ZBt1/GamV0vFPmMyF/InPayzk3XQMEiIXkSKpYxO6jjIIu5SIUcpgR/sIcKMuRuufO22KgjBb1aC0EyM5pWUfsiroFlU9YBLxARljoANlSX2xTsjkaIZvFOBC3NQIDAQAB",
-    "RsaPrivateKey": "MIIEdQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDOjyOptsVB+su4D+G1O8fSub1VFsl11GXAAsKnOYDkT/1WaCJ4+QFOIlyNfWQbJHOzVm/mLht6CNr2S8N5vMVJ3eD+OTOS7IjXu4ac94qEQhSpTtZDqpYzN1Hgd10WV4Kubm1opOvIAsdHbEZn3mMDv6VHE1PZtaSEhLN1uUlm11n1FQZEG39sfzX6+o7TNARq78sLZkGfkaYlQ6U07m6i/lVjlkG3X8ZqZXS8U+YzIX8ic9rLOTddAwSIheRIqljE7qOMgi7lIhRymBH+whwoy5G6587bYqCMFvVoLQTIzmlZR+yKugWVT1gEvEBGWOgA2VJfbFOyORohm8U4ELc1AgMBAAECggEAOIfUKs5qjfQlbOpryz3hIjrTJkZmPGk0r6gRvdJvBA0gOFWnmZQMV2XwDokSrJr9T0eIuGZF/tANnPp/NQIEvIKM4Qampr81dFVOMgdNUYUEQpHg8gPtt3acYeJJB6RLj5GJP+pi3Qpln5ZyblrenlgE077mY97id6IZu05KWGp5bc1g7oJosxiTKSVpLMaz8C//Vu6pn1GIjAsF+7ZV52UwCeAKkDayuhcxIpG413CZR3Prnpu9j5dhh4OCBXC/jDKE46as5Rs9JXv24gID1iHs0gl1o/08pJ8yY7jPMNM9SDHh5IQy3siI8pYwDqOuthnlUpO/K8/C5QhwdqIuAQKBgQD3leswCA78BP1F4fp/YQNyN6Wqiu7Y0Jrzc3/CmKfrTdTNxpbXmczSckYn7tzmHdzMPbFiydyYa6a2CdVgqZ4LoQ5Aop90SCus8UTmiuG765VRIjrV/oLTaoMPmbHfu9pyMXl1RhSV2r/SHpFTompZeh8bfh5tYtX+ofr13FXWKQKBgQDVlEahFWg20pgADw7fADxvnlZ3Lr1ILkMWwQPMl03MNtwBzaOMI35bowcpRCzYrFAbXvnrEQOcucv2XFzLqF8gpu4SqyXceMOssLH+fkEez0jvsp60KRuf40ryyCe/vwuDqqxLjwHR4ly3EVdrFkpl9zCS9mm8S/oTqmZE+xfCLQKBgQDqGz8sxqHsmYcnWhtz8LbCfG3Qydg4+V9bDf5jcddtvsWW4c3mBc7PuzAtOEZ17QzHrxoZEEjfcwNLJBc4dIo18s84PM1LtaZevDBrUi1KdONWuWgqyqLH5/IPgUPZC5bt3Ww8gMycOiChPTgrferTuo7Jf0KkKg2w3VcgvXwIqQKBgBngMP5rHYkm0ouPR3n1CV1sjYU7AGuyTyZ+k/tBiYdoThdZ1qqv0itAASoavGQz3DC0vQqhsRJX4EIkxolWCNBn6QgR/DBN4UcW0TnIChO1gVypA1lIcbRZUUdAwLAWcUqubtlopgvLpPf4/eJXfQQFgrkLaZwKiG3Bg0pwMVyxAoGARgwgHdcgnmXgfOx0wL4Iq1RP/QI+SUo0qjYfqRwqu82FiZrlsYHxutPucpLIk87PshT92lgk6J10FCTg9QXG71y2e2rFokIPlDV337xkOwq3C4aJId2P3UcH+cY+1dUKnd/Ahk+SsxQW//HXlFllEppxxUgl93I8RTQ4n2TR8wU="
+    "Sm2PublicKey": "", //公钥
+    "Sm2PrivateKey": "", //私钥
+    "Sm2CompressedPublicKey": "", //压缩公钥
+    "Sm4Key": "", //SM4KEY
+    "Sm4IV": "", //SM4IV
+    "AesKey": "", //AESKey
+    "DescKey": "", //DESCKey
+    "RsaPublicKey": "",
+    "RsaPrivateKey": ""
   }
 }
